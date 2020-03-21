@@ -10,6 +10,10 @@ const io = sockitio(server);
 const port = process.env.PORT || 5000;
 const publicDirectoryPath = path.join(__dirname, "../public");
 
+io.on("connection", () => {
+  console.log("webSockit is connected client side");
+});
+
 app.use(express.static(publicDirectoryPath));
 
 server.listen(port, () => {
