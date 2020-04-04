@@ -15,8 +15,14 @@ io.on("connection", socket => {
 
   socket.emit("message", "Welcome!");
 
+  socket.broadcast.emit("message", "A new user has joined!");
+
   socket.on("sendMessage", mesg => {
     io.emit("message", mesg);
+  });
+
+  socket.on("disconnect", () => {
+    io.emit("message", "A user has left!");
   });
 });
 
