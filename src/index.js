@@ -10,17 +10,13 @@ const io = sockitio(server);
 const port = process.env.PORT || 5000;
 const publicDirectoryPath = path.join(__dirname, "../public");
 
-let count = 0;
-
 io.on("connection", socket => {
   console.log("webSockit is connected client side");
 
-  socket.emit("countUpdater", count);
+  socket.emit("message", "Welcome!");
 
-  socket.on("increment", () => {
-    count++;
-    //socket.emit("countUpdater", count);
-    io.emit("countUpdater", count);
+  socket.on("sendMessage", mesg => {
+    io.emit("message", mesg);
   });
 });
 
