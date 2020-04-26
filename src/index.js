@@ -10,15 +10,19 @@ const io = sockitio(server);
 const port = process.env.PORT || 5000;
 const publicDirectoryPath = path.join(__dirname, "../public");
 
-io.on("connection", socket => {
+io.on("connection", (socket) => {
   console.log("webSockit is connected client side");
 
   socket.emit("message", "Welcome!");
 
   socket.broadcast.emit("message", "A new user has joined!");
 
-  socket.on("sendMessage", mesg => {
+  socket.on("sendMessage", (mesg) => {
     io.emit("message", mesg);
+  });
+
+  socket.on("sendLocation", (coords) => {
+    io.emit("message", `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`);
   });
 
   socket.on("disconnect", () => {
