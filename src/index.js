@@ -17,12 +17,16 @@ io.on("connection", (socket) => {
 
   socket.broadcast.emit("message", "A new user has joined!");
 
-  socket.on("sendMessage", (mesg) => {
+  socket.on("sendMessage", (mesg, callback) => {
     io.emit("message", mesg);
+    callback('successfully');
   });
 
   socket.on("sendLocation", (coords) => {
-    io.emit("message", `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`);
+    io.emit(
+      "message",
+      `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`
+    );
   });
 
   socket.on("disconnect", () => {

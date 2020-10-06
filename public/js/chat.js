@@ -9,7 +9,9 @@ document.querySelector("#message-form").addEventListener("submit", (e) => {
 
   const message = e.target.elements.message.value;
 
-  socket.emit("sendMessage", message);
+  socket.emit("sendMessage", message, (mesg) => {
+    console.log(`message was Delivered ${mesg}!`);
+  });
 });
 
 document.querySelector("#send-location").addEventListener("click", () => {
