@@ -2,7 +2,7 @@ const path = require("path");
 const htttp = require("http");
 const express = require("express");
 const sockitio = require("socket.io");
-
+const Filter = require("bad-words");
 const app = express();
 const server = htttp.createServer(app);
 const io = sockitio(server);
@@ -17,12 +17,21 @@ io.on("connection", (socket) => {
 
   socket.broadcast.emit("message", "A new user has joined!");
 
-  socket.on("sendMessage", (mesg) => {
+  socket.on("sendMessage", (mesg, callback) => {
+    const filter = new Filter();
+    if (filter.isProfane(mesg)) {
+      return callback("Profanity is not allowed");
+    }
     io.emit("message", mesg);
+    callback();
   });
 
-  socket.on("sendLocation", (coords) => {
-    io.emit("message", `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`);
+  socket.on("sendLocation", (coords, callback) => {
+    io.emit(
+      "message",
+      `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`
+    );
+    callback();
   });
 
   socket.on("disconnect", () => {
