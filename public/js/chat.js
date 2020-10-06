@@ -9,8 +9,11 @@ document.querySelector("#message-form").addEventListener("submit", (e) => {
 
   const message = e.target.elements.message.value;
 
-  socket.emit("sendMessage", message, (mesg) => {
-    console.log(`message was Delivered ${mesg}!`);
+  socket.emit("sendMessage", message, (err) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log(`message was Delivered!`);
   });
 });
 
