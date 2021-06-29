@@ -6,6 +6,7 @@ const Filter = require("bad-words");
 const app = express();
 const server = htttp.createServer(app);
 const io = sockitio(server);
+const { generateMessage } = require("./utils/message");
 
 const port = process.env.PORT || 5000;
 const publicDirectoryPath = path.join(__dirname, "../public");
@@ -13,16 +14,16 @@ const publicDirectoryPath = path.join(__dirname, "../public");
 io.on("connection", (socket) => {
   console.log("webSockit is connected client side");
 
-  socket.emit("message", "Welcome!");
+  socket.emit("message", generateMessage("Welcome!"));
 
-  socket.broadcast.emit("message", "A new user has joined!");
+  socket.broadcast.emit("message", generateMessage("A new user has joined!"));
 
   socket.on("sendMessage", (mesg, callback) => {
     const filter = new Filter();
     if (filter.isProfane(mesg)) {
       return callback("Profanity is not allowed");
     }
-    io.emit("message", mesg);
+    io.emit("message", generateMessage(mesg));
     callback();
   });
 
@@ -35,7 +36,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", "A user has left!");
+    io.emit("message", generateMessage("A user has left!"));
   });
 });
 
