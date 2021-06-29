@@ -6,7 +6,7 @@ const Filter = require("bad-words");
 const app = express();
 const server = htttp.createServer(app);
 const io = sockitio(server);
-const { generateMessage } = require("./utils/message");
+const { generateMessage, generateMessageLocation } = require("./utils/message");
 
 const port = process.env.PORT || 5000;
 const publicDirectoryPath = path.join(__dirname, "../public");
@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
   socket.on("sendLocation", (coords, callback) => {
     io.emit(
       "locationMessage",
-      `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`
+      generateMessageLocation(`https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`)
     );
     callback();
   });
