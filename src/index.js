@@ -14,16 +14,22 @@ const publicDirectoryPath = path.join(__dirname, "../public");
 io.on("connection", (socket) => {
   console.log("webSockit is connected client side");
 
-  socket.emit("message", generateMessage("Welcome!"));
+  socket.on('join', ({ username, room }) => {
+    socket.join(room);
 
-  socket.broadcast.emit("message", generateMessage("A new user has joined!"));
+    socket.emit("message", generateMessage("Welcome!"));
+
+    socket.broadcast.to(room).emit("message", generateMessage(`${username} has joined!`));
+  })
+
+
 
   socket.on("sendMessage", (mesg, callback) => {
     const filter = new Filter();
     if (filter.isProfane(mesg)) {
       return callback("Profanity is not allowed");
     }
-    io.emit("message", generateMessage(mesg));
+    io.to('test').emit("message", generateMessage(mesg));
     callback();
   });
 
